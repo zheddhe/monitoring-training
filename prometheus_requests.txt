@@ -1,0 +1,22 @@
+prometheus_http_requests_total
+
+prometheus_http_requests_total{handler="/graph"}
+
+prometheus_http_requests_total{code=~"20."}
+
+prometheus_http_requests_total{code=~"20."} offset 10m
+
+prometheus_http_requests_total{code="200", handler="/graph"} [5m]
+
+prometheus_http_requests_total{code="200"} + prometheus_http_requests_total{code="200", handler=~"/api/.*"}
+
+sum(prometheus_http_requests_total)
+
+sum by (handler) (prometheus_http_requests_total)
+
+avg_over_time(prometheus_http_requests_total [5m])
+
+max by (handler) (prometheus_http_requests_total) [20m:1m]
+
+avg_over_time(max by (handler) (prometheus_http_requests_total) [20m:1m] )
+
