@@ -15,6 +15,8 @@ alerting:
 rule_files:
   # - "first_rules.yml"
   # - "second_rules.yml"
+  
+  - "recording_rules.yml"
 
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
@@ -48,3 +50,8 @@ scrape_configs:
     metrics_path: "/my_metrics"
     static_configs:
       - targets: ["localhost:5000"]
+
+  # exporter push gateway (centralisateur de job batch / courts)
+  - job_name: "push_gateway"
+    static_configs:
+      - targets: ["localhost:9091"]

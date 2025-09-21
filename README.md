@@ -50,7 +50,7 @@ uv --version
 
 ## 2. Prometheus
 
-### installation
+### Installation
 
 ```bash
 wget -c https://github.com/prometheus/prometheus/releases/download/v2.42.0/prometheus-2.42.0.linux-amd64.tar.gz
@@ -59,33 +59,45 @@ mv ~/prometheus-2.42.0.linux-amd64 ~/prometheus
 rm ~/prometheus-2.42.0.linux-amd64.tar.gz
 ```
 
-### Commandes scriptées
+### Lancement (prometheus et exporters)
 
 ```bash
 # startup
 ./prometheus_start.sh
 
-# addons metrics docker daemon
-./dockerd_stop.sh
-./dockerd_start_metrics.sh
-
-# addons metrics machine
-./machine_monitor.sh
-
-# addons metrics mysql
-./mysql_run.sh # puis si besoin ./mysql_restart.sh
-./mysql_monitor.sh
+# rule check
+./prometheus_rule_check.sh
 ```
 
-### Prometheus storage Write Ahead Log (WAL)
+### Paramètres spéciaux 
+
+#### Storage Write Ahead Log (WAL)
 
 >--storage.tsbd.path [chemin du WAL]
 
 >--storage.tsbd.retention.time [delai de retention pour le WAL]
 
-## 3. Node Exporter
+## 3. Docker Daemon Exporter
 
-### installation
+### Installation et lancement
+
+```bash
+# addons metrics docker daemon
+./dockerd_stop.sh
+./dockerd_start_metrics.sh
+```
+
+### Désinstallation
+
+```bash
+# addons metrics docker daemon
+./dockerd_stop.sh
+./dockerd_start_standard.sh
+```
+
+## 4. Node Exporter
+
+### Installation
 
 ```bash
 wget https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
@@ -94,12 +106,59 @@ mv ~/node_exporter-1.0.1.linux-amd64 ~/node_exporter
 rm ~/node_exporter-1.0.1.linux-amd64.tar.gz
 ```
 
-## 3. Push Gateway
+### Lancement
 
-### installation
+```bash
+# addons metrics machine
+./machine_monitor.sh
+```
+
+## 5. MySQL Exporter
+
+### Installation et lancement MySQL
+
+```bash
+# installation initiale
+./mysql_run.sh
+# relance
+./mysql_restart.sh
+```
+
+### Installation et Lancement exporter
+
+```bash
+# addons metrics mysql
+./mysql_monitor.sh
+```
+
+## 6. Push Gateway
+
+### Installation
 
 ```bash
 wget https://github.com/prometheus/pushgateway/releases/download/v1.4.1/pushgateway-1.4.1.linux-amd64.tar.gz
 tar -xvf pushgateway-1.4.1.linux-amd64.tar.gz
 mv pushgateway-1.4.1.linux-amd64 pushgateway
+```
+
+### Lancement
+
+```bash
+wget https://github.com/prometheus/pushgateway/releases/download/v1.4.1/pushgateway-1.4.1.linux-amd64.tar.gz
+tar -xvf pushgateway-1.4.1.linux-amd64.tar.gz
+mv pushgateway-1.4.1.linux-amd64 pushgateway
+```
+
+### Envoi de metrique directe
+
+```bash
+# ajout d'une metrique avec valeur
+echo "my_metric_through_push_gateway 1" | curl -X POST --data-binary @- http://localhost:9091/metrics/job/my_fake_job/instance/my_fake_instance/my_other_label/its_value
+
+# suppression d'un job
+# curl -X DELETE http://localhost:9091/metrics/job/<job_name>
+# suppression d'une instance de job
+# curl -X DELETE http://localhost:9091/metrics/job/<job_name>/instance/<instance>
+# suppresion d'une etiquette dans une instance de job
+curl -X DELETE http://localhost:9091/metrics/job/my_fake_job/instance/my_fake_instance/my_other_label/its_value
 ```
