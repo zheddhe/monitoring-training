@@ -207,7 +207,8 @@ marimo/_lsp/
 __marimo__/
 
 # mlflow
-data
-node_exporter
-prometheus
-pushgateway
+/data
+/node_exporter
+/prometheus
+/pushgateway
+/alertmanager

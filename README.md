@@ -59,11 +59,15 @@ mv ~/prometheus-2.42.0.linux-amd64 ~/prometheus
 rm ~/prometheus-2.42.0.linux-amd64.tar.gz
 ```
 
-### Lancement (prometheus et exporters)
+### Lancement
 
 ```bash
 # startup (avec paramètres spéciaux ci-dessous)
-### Storage Write Ahead Log (WAL)
+### configuration YAML (inclus dans le script)
+# --config.file config/prometheus.yml
+### API lifecycle (inclus dans le script)
+# --web.enable-lifecycle
+### Storage Write Ahead Log (WAL) (non inclus dans le script bash : a ajouter si besoin)
 # --storage.tsbd.path [chemin du WAL, ex: /var/lib/prometheus]
 # --storage.tsbd.retention.time [delai de retention pour le WAL, ex: 30d]
 ./prometheus_start.sh
@@ -71,13 +75,6 @@ rm ~/prometheus-2.42.0.linux-amd64.tar.gz
 # rule check
 ./prometheus_rule_check.sh
 ```
-
-### Paramètres spéciaux 
-
-#### Storage Write Ahead Log (WAL)
-
-
->
 
 ## 3. Docker Daemon Exporter
 
@@ -112,7 +109,7 @@ rm ~/node_exporter-1.0.1.linux-amd64.tar.gz
 
 ```bash
 # addons metrics machine
-./machine_monitor.sh
+./node_monitor.sh
 ```
 
 ## 5. MySQL Exporter
@@ -163,4 +160,25 @@ echo "my_metric_through_push_gateway 1" | curl -X POST --data-binary @- http://l
 # curl -X DELETE http://localhost:9091/metrics/job/<job_name>/instance/<instance>
 # suppresion d'une etiquette dans une instance de job
 curl -X DELETE http://localhost:9091/metrics/job/my_fake_job/instance/my_fake_instance/my_other_label/its_value
+```
+
+## 7. Alert Manager
+
+### Installation
+
+```bash
+wget https://github.com/prometheus/alertmanager/releases/download/v0.22.2/alertmanager-0.22.2.linux-amd64.tar.gz
+tar -xvf alertmanager-0.22.2.linux-amd64.tar.gz
+mv alertmanager-0.22.2.linux-amd64 alertmanager
+rm alertmanager-0.22.2.linux-amd64.tar.gz
+```
+
+### Lancement
+
+```bash
+# startup
+./alertmanager_start.sh
+
+# rule check
+./alertmanager_rule_check.sh
 ```
