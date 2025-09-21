@@ -230,7 +230,16 @@ kubectl describe pod datascientest-charge-pod
 # (optionel) recuperation user et mot de passe admin grafana
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath='{.data.admin-user}' | base64 -d ; echo
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
-# (optionel) forwarder le port grafana vers un port simple usuel (3000) 
+# (optionel) forwarder le port grafana vers un port simple usuel (3000) - forwarding actif (éventuellement a mettre en background)
 export POD_NAME=$(kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname)
 kubectl --namespace monitoring port-forward $POD_NAME 3000
+# ou bien monitorer celui utilisé par défaut
+kubectl get svc -n monitoring | grep grafana
 ```
+
+```bash
+# exercice pratique installation de wordpress customisée via helm
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm install wordpress bitnami/wordpress --set mariadb.primary.persistence.enabled=true --set mariadb.primary.persistence.storageClass=local-path --set mariadb.primary.persistence.size=20Gi --set persistence.enabled=false --set service.type=NodePort --namespace website --create-namespace
+```    
