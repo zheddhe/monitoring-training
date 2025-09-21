@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-prometheus/prometheus --config.file=${1:-prometheus.yml}
+# ${@:2} tous les argument additionnels après le premier sont passés à la commande
+prometheus/prometheus --config.file=${1:-config/prometheus.yml} ${@:2}

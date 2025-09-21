@@ -62,7 +62,10 @@ rm ~/prometheus-2.42.0.linux-amd64.tar.gz
 ### Lancement (prometheus et exporters)
 
 ```bash
-# startup
+# startup (avec paramètres spéciaux ci-dessous)
+### Storage Write Ahead Log (WAL)
+# --storage.tsbd.path [chemin du WAL, ex: /var/lib/prometheus]
+# --storage.tsbd.retention.time [delai de retention pour le WAL, ex: 30d]
 ./prometheus_start.sh
 
 # rule check
@@ -73,9 +76,8 @@ rm ~/prometheus-2.42.0.linux-amd64.tar.gz
 
 #### Storage Write Ahead Log (WAL)
 
->--storage.tsbd.path [chemin du WAL]
 
->--storage.tsbd.retention.time [delai de retention pour le WAL]
+>
 
 ## 3. Docker Daemon Exporter
 
