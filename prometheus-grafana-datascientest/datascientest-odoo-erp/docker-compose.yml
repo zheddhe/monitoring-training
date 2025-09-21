@@ -1,0 +1,32 @@
+version: '2'
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_DB=postgres
+    restart: always             # exécuter en tant que service
+    volumes:
+        - ./postgresql:/var/lib/postgresql/data
+  odoo14:
+    image: odoo:12.0
+    depends_on:
+      - db
+    ports:
+      - "10014:8069"
+      - "20014:8072" #  chat entre utilisateurs
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+      - ./addons:/mnt/extra-addons
+      - ./etc:/etc/odoo
+    restart: always              # exécuter en tant que service
+  
+  # les accès seront admin/admin pour Grafana
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
