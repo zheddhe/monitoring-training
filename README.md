@@ -204,8 +204,11 @@ chmod 600 ~/.kube/config
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring  --create-namespace --set grafana.service.type=NodePort --set promotheus.service.type=NodePort
-# vérification
+# recuperation password admin
+kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+# vérification des CR et des PODS
 kubectl get crds -n monitoring  | grep monitoring
+kubectl get pods -n monitoring
 ```
 
 ### Lancement
