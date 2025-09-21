@@ -210,3 +210,4 @@ __marimo__/
 data
 node_exporter
 prometheus
+pushgateway

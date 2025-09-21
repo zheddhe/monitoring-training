@@ -50,6 +50,15 @@ uv --version
 
 ## 2. Prometheus
 
+### installation
+
+```bash
+wget -c https://github.com/prometheus/prometheus/releases/download/v2.42.0/prometheus-2.42.0.linux-amd64.tar.gz
+tar xvf ~/prometheus-2.42.0.linux-amd64.tar.gz
+mv ~/prometheus-2.42.0.linux-amd64 ~/prometheus
+rm ~/prometheus-2.42.0.linux-amd64.tar.gz
+```
+
 ### Commandes scriptées
 
 ```bash
@@ -73,3 +82,24 @@ uv --version
 >--storage.tsbd.path [chemin du WAL]
 
 >--storage.tsbd.retention.time [delai de retention pour le WAL]
+
+## 3. Node Exporter
+
+### installation
+
+```bash
+wget https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
+tar -xvf ~/node_exporter-1.0.1.linux-amd64.tar.gz
+mv ~/node_exporter-1.0.1.linux-amd64 ~/node_exporter
+rm ~/node_exporter-1.0.1.linux-amd64.tar.gz
+```
+
+## 3. Push Gateway
+
+### installation
+
+```bash
+wget https://github.com/prometheus/pushgateway/releases/download/v1.4.1/pushgateway-1.4.1.linux-amd64.tar.gz
+tar -xvf pushgateway-1.4.1.linux-amd64.tar.gz
+mv pushgateway-1.4.1.linux-amd64 pushgateway
+```
