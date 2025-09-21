@@ -182,3 +182,38 @@ rm alertmanager-0.22.2.linux-amd64.tar.gz
 # rule check
 ./alertmanager_rule_check.sh
 ```
+
+## 8. Kubernetes (K8s / K3s) et Helm
+
+### Installation & verification
+
+```bash
+# installer K3s
+curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+# verifier les versions
+kubectl version
+# verifier les noeuds
+k3s kubectl get nodes
+# installer Helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+# installer la stack K8s + Prometheus
+kubectl config view --raw > ~/.kube/config # exportation du fichier de configuration de Kubernetes afin que Helm puisse discuter avec l'API de Kubernetes
+chmod 600 ~/.kube/config
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring  --create-namespace --set grafana.service.type=NodePort --set promotheus.service.type=NodePort
+# vérification
+kubectl get crds -n monitoring  | grep monitoring
+```
+
+### Lancement
+
+```bash
+# startup
+./alertmanager_start.sh
+
+# rule check
+./alertmanager_rule_check.sh
+```
