@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: datascientest-pod-nonsain
+spec:
+  containers:
+    - name: datascientest-pod-nonsain
+      image: nginx
+  restartPolicy: Always
+  nodeSelector:
+    disktype: ssd

@@ -185,7 +185,7 @@ rm alertmanager-0.22.2.linux-amd64.tar.gz
 
 ## 8. Kubernetes (K8s / K3s) et Helm
 
-### Installation & verification
+### Installation & lancement
 
 ```bash
 # installer K3s
@@ -204,19 +204,33 @@ chmod 600 ~/.kube/config
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring  --create-namespace --set grafana.service.type=NodePort --set promotheus.service.type=NodePort
-# recuperation password admin
-kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+```
+
+### Exploitation
+
+```bash
 # vérification des CR et des PODS
 kubectl get crds -n monitoring  | grep monitoring
 kubectl get pods -n monitoring
-```
 
-### Lancement
+# passage du POD prometheus de cluster IP vers NodePort (edition via VI)
+kubectl edit svc prometheus-kube-prometheus-prometheus -n monitoring
+# verification du type de monitoring (pour prometheus)
+kubectl get svc -n monitoring
 
-```bash
-# startup
-./alertmanager_start.sh
+# créer un POD (et le supprimer au préalable si besoin)
+kubectl delete pod datascientest-charge-pod
+kubectl apply -f config/charge-pod.yml
 
-# rule check
-./alertmanager_rule_check.sh
+# vérifier des statuts et filtrer ceux en pending
+kubectl get all --all-namespaces | grep -i "pending"
+# afficher des infos précises sur un pod
+kubectl describe pod datascientest-charge-pod
+
+# (optionel) recuperation user et mot de passe admin grafana
+kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath='{.data.admin-user}' | base64 -d ; echo
+kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+# (optionel) forwarder le port grafana vers un port simple usuel (3000) 
+export POD_NAME=$(kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname)
+kubectl --namespace monitoring port-forward $POD_NAME 3000
 ```
