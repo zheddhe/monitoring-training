@@ -243,3 +243,13 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 helm install wordpress bitnami/wordpress --set mariadb.primary.persistence.enabled=true --set mariadb.primary.persistence.storageClass=local-path --set mariadb.primary.persistence.size=20Gi --set persistence.enabled=false --set service.type=NodePort --namespace website --create-namespace
 ```    
+
+### Desinstallation
+
+```bash
+# arrêter et supprimer k3s et ses services
+sudo /usr/local/bin/k3s-uninstall.sh
+
+# supprimer helm
+sudo rm -f /usr/local/bin/helm
+```  
