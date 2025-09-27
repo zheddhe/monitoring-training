@@ -1,4 +1,4 @@
-# monitoring-training
+# Monitoring-training
 Pratique des outils de monitoring pormetheus/grafana dans un contexte MLOPS
 
 ## 1. Rappel des vérification d'usage de la VM (avec OS Ubuntu)
